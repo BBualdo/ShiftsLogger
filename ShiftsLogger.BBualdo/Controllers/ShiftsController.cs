@@ -50,4 +50,39 @@ public class ShiftsController : ControllerBase
 
     return CreatedAtAction(nameof(AddShift), new { id = shift.ShiftId, emloyeeName = shift.EmployeeName, startDate = shift.StartDate, endDate = shift.EndDate });
   }
+
+  [HttpPut("{id}")]
+  public async Task<ActionResult<Shift>> UpdateShift(int id, Shift shift)
+  {
+    if (shift.ShiftId != id) return NotFound();
+
+    _context.Entry(shift).State = EntityState.Modified;
+
+    try
+    {
+      await _context.SaveChangesAsync();
+    }
+    catch (DbUpdateConcurrencyException)
+    {
+      throw;
+    }
+
+    return NoContent();
+  }
+
+  [HttpDelete("{id}")]
+  public async Task<ActionResult<Shift>> DeleteShift(int id)
+  {
+    if (_context.Shifts == null) return NotFound();
+
+    Shift? shift = _context.Shifts.Where(shift => shift.ShiftId == id).FirstOrDefault();
+
+    if (shift == null) return NotFound();
+
+    _context.Shifts.Remove(shift);
+
+    await _context.SaveChangesAsync();
+
+    return NoContent();
+  }
 }
