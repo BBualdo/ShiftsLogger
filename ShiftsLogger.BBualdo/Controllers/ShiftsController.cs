@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShiftsLogger.BBualdo.Models;
+using ShiftsLoggerAPI.Models;
 using System.Data;
 
-namespace ShiftsLogger.BBualdo.Controllers;
+namespace ShiftsLoggerAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

@@ -4,11 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ShiftsLogger.BBualdo;
 
 #nullable disable
 
-namespace ShiftsLogger.BBualdo.Migrations
+namespace ShiftsLoggerAPI.Migrations
 {
     [DbContext(typeof(ShiftsContext))]
     partial class ShiftsContextModelSnapshot : ModelSnapshot

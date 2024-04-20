@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using ShiftsLogger.BBualdo;
+using ShiftsLoggerAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 

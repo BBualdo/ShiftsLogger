@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShiftsLogger.BBualdo.Models;
+using ShiftsLoggerAPI.Models;
 
-namespace ShiftsLogger.BBualdo;
+namespace ShiftsLoggerAPI;
 
 public class ShiftsContext : DbContext
 {

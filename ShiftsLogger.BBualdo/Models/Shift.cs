@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ShiftsLogger.BBualdo.Models;
+namespace ShiftsLoggerAPI.Models;
 
 public class Shift
 {

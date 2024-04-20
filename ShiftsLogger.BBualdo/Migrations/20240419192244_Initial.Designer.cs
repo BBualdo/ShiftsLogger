@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ShiftsLogger.BBualdo;
+using ShiftsLoggerAPI;
 
 #nullable disable
 
-namespace ShiftsLogger.BBualdo.Migrations
+namespace ShiftsLoggerAPI.Migrations
 {
     [DbContext(typeof(ShiftsContext))]
     [Migration("20240419192244_Initial")]

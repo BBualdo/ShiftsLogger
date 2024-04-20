@@ -4,5 +4,5 @@ AppEngine app = new();
 
 while (app.IsRunning)
 {
-  app.MainMenu();
+  await app.MainMenu();
 }
