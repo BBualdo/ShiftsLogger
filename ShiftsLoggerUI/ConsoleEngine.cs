@@ -17,12 +17,12 @@ internal static class ConsoleEngine
     return choice;
   }
 
-  internal static void ShowShiftsTable(List<Shift>? shifts)
+  internal static bool ShowShiftsTable(List<Shift>? shifts)
   {
     if (shifts == null)
     {
       AnsiConsole.Markup("[red]Shifts not found.[/] Try to create one first.");
-      return;
+      return false;
     }
 
     Table table = new();
@@ -38,6 +38,7 @@ internal static class ConsoleEngine
     }
 
     AnsiConsole.Write(table);
+    return true;
   }
 
   internal static void ShowTitle()

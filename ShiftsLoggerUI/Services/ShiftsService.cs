@@ -1,5 +1,4 @@
-﻿using ShiftsLoggerUI.Helpers;
-using ShiftsLoggerUI.Models;
+﻿using ShiftsLoggerUI.Models;
 using Spectre.Console;
 using System.Text;
 using System.Text.Json;
@@ -22,21 +21,8 @@ internal static class ShiftsService
     return shifts;
   }
 
-  internal static async Task CreateShift(HttpClient client)
+  internal static async Task CreateShift(HttpClient client, ShiftInsertRequest shift)
   {
-    string employeeName = UserInput.GetName();
-    if (employeeName == "0") return;
-
-    string startDateStr = UserInput.GetStartDate(employeeName);
-    if (startDateStr == "0") return;
-
-    string endDateStr = UserInput.GetEndDate(startDateStr, employeeName);
-    if (endDateStr == "0") return;
-
-    DateTime startDate = DateTimeParser.Parse(startDateStr);
-    DateTime endDate = DateTimeParser.Parse(endDateStr);
-
-    ShiftRequest shift = new(employeeName, startDate, endDate);
     var json = JsonSerializer.Serialize(shift);
     var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -51,6 +37,26 @@ internal static class ShiftsService
 
     if (!res.IsSuccessStatusCode) AnsiConsole.Markup("\n[red]Couldn't connect to ShiftLoggerAPI server. [/]\n");
     else AnsiConsole.Markup("\n[green]Shift added successfully![/]\n");
+
+    return;
+  }
+
+  internal static async Task UpdateShift(HttpClient client, int id, ShiftUpdateRequest shift)
+  {
+    var json = JsonSerializer.Serialize(shift);
+    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+    HttpRequestMessage req = new()
+    {
+      Method = HttpMethod.Put,
+      RequestUri = new Uri($"https://localhost:7106/api/shifts/{id}"),
+      Content = content
+    };
+
+    HttpResponseMessage res = await client.SendAsync(req);
+
+    if (!res.IsSuccessStatusCode) AnsiConsole.Markup("\n[red]Couldn't connect to ShiftLoggerAPI server. [/]\n");
+    else AnsiConsole.Markup("\n[green]Shift updated successfully![/]\n");
 
     return;
   }

@@ -1,13 +1,14 @@
 ﻿using ShiftsLoggerUI.Helpers;
+using ShiftsLoggerUI.Models;
 using Spectre.Console;
 
 namespace ShiftsLoggerUI;
 
 internal static class UserInput
 {
-  internal static string GetName()
+  internal static string GetName(string employeeName = "employee")
   {
-    string name = AnsiConsole.Ask<string>("Enter [cyan1]employee name[/] or type 0 to cancel: ");
+    string name = AnsiConsole.Ask<string>($"Enter new [cyan1]name[/] for [cyan1]{employeeName}[/] or type 0 to cancel: ");
 
     if (name == "0") return name;
 
@@ -54,5 +55,20 @@ internal static class UserInput
     }
 
     return endDate;
+  }
+
+  internal static int GetShiftId(List<Shift> shifts)
+  {
+    int shiftId = AnsiConsole.Ask<int>("Enter [cyan1]Shift ID[/] you want to update or type 0 to cancel: ");
+    if (shiftId == 0) return shiftId;
+
+    while (!shifts.Any(shift => shift.ShiftId == shiftId))
+    {
+      AnsiConsole.Markup("\n[red]There is no Shift with given ID.\n");
+      shiftId = AnsiConsole.Ask<int>("Try again: ");
+      if (shiftId == 0) return shiftId;
+    }
+
+    return shiftId;
   }
 }

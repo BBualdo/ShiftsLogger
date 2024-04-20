@@ -1,4 +1,5 @@
-﻿using ShiftsLoggerUI.Models;
+﻿using ShiftsLoggerUI.Helpers;
+using ShiftsLoggerUI.Models;
 using ShiftsLoggerUI.Services;
 using Spectre.Console;
 
@@ -26,15 +27,16 @@ internal class AppEngine
     switch (choice)
     {
       case "Show Shifts":
-        List<Shift>? shifts = await ShiftsService.GetShifts(Client);
-        ConsoleEngine.ShowShiftsTable(shifts);
+        await ShowShifts();
         PressAnyKey();
         break;
       case "Create Shift":
-        await ShiftsService.CreateShift(Client);
+        await CreateShift();
         PressAnyKey();
         break;
       case "Update Shift":
+        await UpdateShift();
+        PressAnyKey();
         break;
       case "Delete Shift":
         break;
@@ -44,6 +46,60 @@ internal class AppEngine
         IsRunning = false;
         break;
     }
+  }
+
+  private async Task ShowShifts()
+  {
+    List<Shift>? shifts = await ShiftsService.GetShifts(Client);
+    ConsoleEngine.ShowShiftsTable(shifts);
+  }
+
+  private async Task CreateShift()
+  {
+    string employeeName = UserInput.GetName();
+    if (employeeName == "0") return;
+
+    string startDateStr = UserInput.GetStartDate(employeeName);
+    if (startDateStr == "0") return;
+
+    string endDateStr = UserInput.GetEndDate(startDateStr, employeeName);
+    if (endDateStr == "0") return;
+
+    DateTime startDate = DateTimeParser.Parse(startDateStr);
+    DateTime endDate = DateTimeParser.Parse(endDateStr);
+
+    ShiftInsertRequest shift = new(employeeName, startDate, endDate);
+
+    await ShiftsService.CreateShift(Client, shift);
+  }
+
+  private async Task UpdateShift()
+  {
+    List<Shift>? shifts = await ShiftsService.GetShifts(Client);
+
+    bool rowsPresent = ConsoleEngine.ShowShiftsTable(shifts);
+
+    if (!rowsPresent || shifts == null) return;
+
+    int id = UserInput.GetShiftId(shifts);
+    if (id == 0) return;
+
+    Shift shift = shifts.First(shift => shift.ShiftId == id);
+    ShiftUpdateRequest updatedShift = new(shift.ShiftId, shift.EmployeeName, shift.StartDate, shift.EndDate);
+
+    string name = UserInput.GetName(shift.EmployeeName);
+    if (name == "0") return;
+    updatedShift.EmployeeName = name;
+
+    string startDate = UserInput.GetStartDate(name);
+    if (startDate == "0") return;
+    updatedShift.StartDate = DateTimeParser.Parse(startDate);
+
+    string endDate = UserInput.GetEndDate(startDate, name);
+    if (endDate == "0") return;
+    updatedShift.EndDate = DateTimeParser.Parse(endDate);
+
+    await ShiftsService.UpdateShift(Client, id, updatedShift);
   }
 
   private void PressAnyKey()
