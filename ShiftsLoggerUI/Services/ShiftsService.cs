@@ -60,4 +60,20 @@ internal static class ShiftsService
 
     return;
   }
+
+  internal static async Task DeleteShift(HttpClient client, int id)
+  {
+    HttpRequestMessage req = new()
+    {
+      Method = HttpMethod.Delete,
+      RequestUri = new Uri($"https://localhost:7106/api/shifts/{id}")
+    };
+
+    HttpResponseMessage res = await client.SendAsync(req);
+
+    if (!res.IsSuccessStatusCode) AnsiConsole.Markup("\n[red]Couldn't connect to ShiftLoggerAPI server. [/]\n");
+    else AnsiConsole.Markup("\n[green]Shift deleted successfully![/]\n");
+
+    return;
+  }
 }

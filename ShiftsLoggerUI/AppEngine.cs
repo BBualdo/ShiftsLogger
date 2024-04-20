@@ -39,6 +39,8 @@ internal class AppEngine
         PressAnyKey();
         break;
       case "Delete Shift":
+        await DeleteShift();
+        PressAnyKey();
         break;
       case "Quit":
         AnsiConsole.Clear();
@@ -81,7 +83,7 @@ internal class AppEngine
 
     if (!rowsPresent || shifts == null) return;
 
-    int id = UserInput.GetShiftId(shifts);
+    int id = UserInput.GetShiftId(shifts, "update");
     if (id == 0) return;
 
     Shift shift = shifts.First(shift => shift.ShiftId == id);
@@ -100,6 +102,20 @@ internal class AppEngine
     updatedShift.EndDate = DateTimeParser.Parse(endDate);
 
     await ShiftsService.UpdateShift(Client, id, updatedShift);
+  }
+
+  private async Task DeleteShift()
+  {
+    List<Shift>? shifts = await ShiftsService.GetShifts(Client);
+
+    bool rowsPresent = ConsoleEngine.ShowShiftsTable(shifts);
+
+    if (!rowsPresent || shifts == null) return;
+
+    int id = UserInput.GetShiftId(shifts, "delete");
+    if (id == 0) return;
+
+    await ShiftsService.DeleteShift(Client, id);
   }
 
   private void PressAnyKey()

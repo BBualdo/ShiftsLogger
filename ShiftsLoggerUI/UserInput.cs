@@ -57,14 +57,14 @@ internal static class UserInput
     return endDate;
   }
 
-  internal static int GetShiftId(List<Shift> shifts)
+  internal static int GetShiftId(List<Shift> shifts, string method)
   {
-    int shiftId = AnsiConsole.Ask<int>("Enter [cyan1]Shift ID[/] you want to update or type 0 to cancel: ");
+    int shiftId = AnsiConsole.Ask<int>($"Enter [cyan1]Shift ID[/] you want to {method} or type 0 to cancel: ");
     if (shiftId == 0) return shiftId;
 
     while (!shifts.Any(shift => shift.ShiftId == shiftId))
     {
-      AnsiConsole.Markup("\n[red]There is no Shift with given ID.\n");
+      AnsiConsole.Markup("\n[red]There is no Shift with given ID.[/]\n");
       shiftId = AnsiConsole.Ask<int>("Try again: ");
       if (shiftId == 0) return shiftId;
     }
