@@ -1,4 +1,5 @@
-﻿using ShiftsLoggerUI.Models;
+﻿using ShiftsLoggerUI.Helpers;
+using ShiftsLoggerUI.Models;
 using Spectre.Console;
 using System.Text;
 using System.Text.Json;
@@ -21,8 +22,20 @@ internal static class ShiftsService
     return shifts;
   }
 
-  internal static async Task CreateShift(HttpClient client, string employeeName, DateTime startDate, DateTime endDate)
+  internal static async Task CreateShift(HttpClient client)
   {
+    string employeeName = UserInput.GetName();
+    if (employeeName == "0") return;
+
+    string startDateStr = UserInput.GetStartDate(employeeName);
+    if (startDateStr == "0") return;
+
+    string endDateStr = UserInput.GetEndDate(startDateStr, employeeName);
+    if (endDateStr == "0") return;
+
+    DateTime startDate = DateTimeParser.Parse(startDateStr);
+    DateTime endDate = DateTimeParser.Parse(endDateStr);
+
     ShiftRequest shift = new(employeeName, startDate, endDate);
     var json = JsonSerializer.Serialize(shift);
     var content = new StringContent(json, Encoding.UTF8, "application/json");

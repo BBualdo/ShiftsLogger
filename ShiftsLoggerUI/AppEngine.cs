@@ -31,7 +31,7 @@ internal class AppEngine
         PressAnyKey();
         break;
       case "Create Shift":
-        await ShiftsService.CreateShift(Client, "Test from C#", DateTime.Now, DateTime.Now);
+        await ShiftsService.CreateShift(Client);
         PressAnyKey();
         break;
       case "Update Shift":
