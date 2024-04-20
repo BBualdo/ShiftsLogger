@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShiftsLogger.BBualdo.Models;
+using System.Data;
 
 namespace ShiftsLogger.BBualdo.Controllers;
 
@@ -21,5 +22,32 @@ public class ShiftsController : ControllerBase
     if (_context.Shifts == null) return NotFound();
 
     return await _context.Shifts.ToListAsync();
+  }
+
+  [HttpGet("{id}")]
+  public async Task<ActionResult<Shift>> GetShift(int id)
+  {
+    if (_context.Shifts == null) return NotFound();
+    Shift? shift = await _context.Shifts.FindAsync(id);
+    if (shift == null) return NotFound();
+
+    return shift;
+  }
+
+  [HttpPost]
+  public async Task<ActionResult<Shift>> AddShift(Shift shift)
+  {
+    _context.Shifts.Add(shift);
+
+    try
+    {
+      await _context.SaveChangesAsync();
+    }
+    catch (DBConcurrencyException ex)
+    {
+      return NotFound(ex);
+    }
+
+    return CreatedAtAction(nameof(AddShift), new { id = shift.ShiftId, emloyeeName = shift.EmployeeName, startDate = shift.StartDate, endDate = shift.EndDate });
   }
 }
